@@ -3,6 +3,8 @@ import re
 import sys
 import subprocess
 
+from signal import SIGTERM, SIG_DFL
+
 """
 
 Create simple ssh tunnel with ssh client programm.
@@ -41,7 +43,7 @@ class SSHTun:
             self.pid = self.__find_pid(t.pid)
         else:
             ## Kill previos tunnel
-            #os.kill(self.__find_pid(), 1)
+            #os.kill(self.__find_pid(), SIGTERM)
             #self.pid = self.start()
 
             # Try to find existing tunnel
@@ -110,7 +112,7 @@ class SSHTun:
 
     def is_alive(self):
         try:
-            os.kill(self.pid, 0)
+            os.kill(self.pid, SIG_DFL)
         except:
             return None
 
@@ -121,7 +123,7 @@ class SSHTun:
             self.pid = self.__find_pid()
 
         if self.pid:
-           os.kill(self.pid, 15)
+           os.kill(self.pid, SIGTERM)
 
     def restart(self):
         self.stop()
